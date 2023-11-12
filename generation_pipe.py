@@ -65,5 +65,5 @@ def generation_pipe(json_path: str, topic: str, question_type: str) -> str:
     return generated_questions
 
 
-generation_pipe(r'./LLM/generated_data.json', 'ПОРЯДОК ОРГАНИЗАЦИИ ДВИЖЕНИЯ ПОЕЗДОВ НА УЧАСТКАХ ОБОРУДОВАННЫХ ЭЛЕКТРОЖЕЗЛОВОЙ СИСТЕМОЙ', "multiple_choice")
+generation_pipe(r'generated_data.json', 'ПОРЯДОК ОРГАНИЗАЦИИ ДВИЖЕНИЯ ПОЕЗДОВ ПРИ ПЕРЕРЫВЕ ДЕЙСТВИЯ ВСЕХ СИСТЕМ ИНТЕРВАЛЬНОГО РЕГУЛИРОВАНИЯ ДВИЖЕНИЯ ПОЕЗДОВ И СВЯЗИ', "multiple_choice")
 

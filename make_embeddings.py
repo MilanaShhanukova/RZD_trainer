@@ -18,8 +18,8 @@ def average_pool(last_hidden_states: Tensor,
 
 def create_embeddings(string_dict, device="cuda"):
 
-    embeddings_raw_name = './embeddings.npy'
-    embeddings_text_name = './embeddings.txt'
+    embeddings_raw_name = 'E:\dev\RZD_trainer\embeddings.npy'
+    embeddings_text_name = 'E:\dev\RZD_trainer\embeddings.txt'
 
     if not os.path.exists(embeddings_raw_name):
         print('Генерация эмбеддингов')
@@ -63,3 +63,25 @@ def get_embedding(text):
     outputs = model(**batch_dict)
     embedding = average_pool(outputs.last_hidden_state, batch_dict['attention_mask']).cpu().detach().numpy()
     return embedding
+
+
+# def get_parts_texts(generated_data_path):
+#     with open(generated_data_path, 'r', encoding='utf-8') as file:
+#         dict = json.load(file)
+
+#         # save only sub small texts 
+#         parapraphs = []
+#         for topic in dict.keys():
+#             for subtopic in dict[topic]:
+#                 for point_inx in range(len(dict[topic][subtopic])):
+#                     parapraphs.append(dict[topic][subtopic][point_inx])
+
+#         string_dict = {i: k for i, k in enumerate(parapraphs)}
+#     return string_dict
+
+
+# generated_data = 'E:\dev\sshack_rzd\generated_data.json'
+# device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+# small_texts_parts = get_parts_texts(generated_data)
+# # create embeddings
+# embeddings_raw, embeddings_text = create_embeddings(small_texts_parts, device)
