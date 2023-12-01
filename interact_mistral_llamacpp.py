@@ -7,11 +7,7 @@ USER_TOKEN = 2188
 BOT_TOKEN = 12435
 LINEBREAK_TOKEN = 13
 
-ROLE_TOKENS = {
-    "user": USER_TOKEN,
-    "bot": BOT_TOKEN,
-    "system": SYSTEM_TOKEN
-}
+ROLE_TOKENS = {"user": USER_TOKEN, "bot": BOT_TOKEN, "system": SYSTEM_TOKEN}
 
 
 def get_message_tokens(model, role, content):
@@ -23,20 +19,12 @@ def get_message_tokens(model, role, content):
 
 
 def get_system_tokens(model):
-    system_message = {
-        "role": "system",
-        "content": SYSTEM_PROMPT
-    }
+    system_message = {"role": "system", "content": SYSTEM_PROMPT}
     return get_message_tokens(model, **system_message)
 
 
 def interact(
-    model_path,
-    n_ctx=2000,
-    top_k=30,
-    top_p=0.9,
-    temperature=0.2,
-    repeat_penalty=1.1
+    model_path, n_ctx=2000, top_k=30, top_p=0.9, temperature=0.2, repeat_penalty=1.1
 ):
     model = Llama(
         model_path=model_path,
@@ -50,7 +38,9 @@ def interact(
 
     while True:
         user_message = input("User: ")
-        message_tokens = get_message_tokens(model=model, role="user", content=user_message)
+        message_tokens = get_message_tokens(
+            model=model, role="user", content=user_message
+        )
         role_tokens = [model.token_bos(), BOT_TOKEN, LINEBREAK_TOKEN]
         tokens += message_tokens + role_tokens
         print(tokens)
@@ -61,7 +51,7 @@ def interact(
             top_k=top_k,
             top_p=top_p,
             temp=temperature,
-            repeat_penalty=repeat_penalty
+            repeat_penalty=repeat_penalty,
         )
         for token in generator:
             token_str = model.detokenize([token]).decode("utf-8", errors="ignore")

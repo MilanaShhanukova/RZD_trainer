@@ -1,4 +1,3 @@
-import fire
 import re
 from typing import List
 
@@ -29,7 +28,7 @@ class QuestionsGenerator:
             n_ctx=4096,
             n_parts=1,
             n_gpu_layers=100 if torch.cuda.is_available() else 0,
-            logits_all=True
+            logits_all=True,
         )
         sys_tokens = self.get_system_tokens(model)
         tokens = sys_tokens
@@ -37,8 +36,8 @@ class QuestionsGenerator:
         return model, tokens
 
     def prepare_user_prompt_answer(self, question: str) -> str:
-        #prompt = f"Дай четкий и короткий ответ на вопрос '{question}', основываясь только на следующем тексте, одним предложением."
-        prompt = f'Дай короткий ответ на вопрос {question}, основываясь только на следующем тексте:'
+        # prompt = f"Дай четкий и короткий ответ на вопрос '{question}', основываясь только на следующем тексте, одним предложением."
+        prompt = f"Дай короткий ответ на вопрос {question}, основываясь только на следующем тексте:"
         return prompt
 
     def prepare_user_prompt(self, question_type: str, questions_nums: int) -> str:
@@ -114,10 +113,10 @@ class QuestionsGenerator:
         top_k=30,
         top_p=0.9,
         temperature=0.2,
-        repeat_penalty=1.1
+        repeat_penalty=1.1,
     ) -> str:
-        print(f'len system: {len(self.system_tokens)}')
-        #tokens = self.system_tokens
+        print(f"len system: {len(self.system_tokens)}")
+        # tokens = self.system_tokens
 
         user_message = prompt + context
         message_tokens = self.get_message_tokens(
@@ -125,7 +124,7 @@ class QuestionsGenerator:
         )
 
         if len(message_tokens) >= 2048:
-             message_tokens = message_tokens[:2048]
+            message_tokens = message_tokens[:2048]
 
         role_tokens = [
             self.model.token_bos(),
@@ -133,14 +132,14 @@ class QuestionsGenerator:
             self.LINEBREAK_TOKEN,
         ]
 
-        print(f'message_tokens: {len(message_tokens)}')
-        print(f'role_tokens: {len(role_tokens)}')
+        print(f"message_tokens: {len(message_tokens)}")
+        print(f"role_tokens: {len(role_tokens)}")
         tokens = self.system_tokens + message_tokens + role_tokens
 
         full_prompt = self.model.detokenize(tokens)
 
         print(len(tokens))
-        #generator = self.model.generate(
+        # generator = self.model.generate(
         completion = self.model.create_completion(
             tokens,
             top_k=top_k,
@@ -151,16 +150,3 @@ class QuestionsGenerator:
             max_tokens=2048,
         )
         print(f'text: {completion["choices"][0]["text"]}')
-
-        # '''
-        # decoded_tokens = []
-        # token_list = []
-        # for token in completion:
-        #     token_list.append(token)
-        #     token_str = self.model.detokenize([token]).decode("utf-8", errors="ignore")
-        #     decoded_tokens.append(token_str)
-        #     tokens.append(token)
-        #     if token == self.model.token_eos():
-        #         break
-        # return "".join(decoded_tokens)
-
